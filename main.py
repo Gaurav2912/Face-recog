@@ -67,9 +67,6 @@ def faceDistanceCalculator(face_encodings, face_to_compare):
     return minimum_distance, percent_of_match
 
 
-# If you want a attence sheet then press y
-attend = input("Press y for an attendance sheet, other wise press n: ")
-
 
 #capture the video from default camera 
 webcam_video_stream = cv2.VideoCapture(0)
@@ -91,7 +88,7 @@ while True:
     for current_face_location,current_face_encoding in zip(all_face_locations,all_face_encodings):
 
         #find all the matches and get the list of matches , it will return a list of boolean values
-        all_matches = face_recognition.compare_faces(known_face_encodings, current_face_encoding)
+        all_matches = face_recognition.compare_faces(known_face_encodings, current_face_encoding, tolerance= 0.5)
         
         # calculate and print the face distances
         minimum_distance, percent_of_match = faceDistanceCalculator(known_face_encodings, current_face_encoding)
@@ -100,13 +97,14 @@ while True:
         
         # initialize with unknown face
         name_of_person = 'Unknown'
-        if (True in all_matches) & (minimum_distance < 0.5) :
+        if True in all_matches:
             first_match_index = all_matches.index(True)             # grab the index of match image
             name_of_person = known_names[first_match_index]         # grab the name of corrosponding index
-            # update attendance 
-            if attend.lower() == 'y':
-                markAttendance(name_of_person)
+            # update attendance
+            markAttendance(name_of_person)
 
+
+        # we can also use  concept of face distance and k-NN  algorithm for recognising faces    
 
         #splitting the tuple to get the four position values of current face in clock wise
 
